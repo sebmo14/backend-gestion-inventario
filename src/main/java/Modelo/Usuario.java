@@ -68,4 +68,16 @@ public abstract class Usuario {
     public void setContraseña(String contraseña) {
         this.contraseña = contraseña;
     }
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "nombre='" + nombre + '\'' +
+                ", apellidos='" + apellidos + '\'' +
+                ", edad=" + edad +
+                ", correo='" + correo + '\'' +
+                ", id=" + id +
+                ", contraseña='" + contraseña + '\'' +
+                '}';
+    }
 }

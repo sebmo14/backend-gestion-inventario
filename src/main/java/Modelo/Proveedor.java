@@ -4,10 +4,7 @@
  */
 package Modelo;
 
-/**
- *
- * @author MI PC
- */
+
 public class Proveedor {
     String Id, Nombre, Email, Direccion;
     int numeroTlf;
