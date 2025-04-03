@@ -1,23 +1,27 @@
 package Modelo;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class Reporte {
-    private int id;
+    private String id;
     private String nombre;
     private LocalDate fecha;
 
-    public Reporte(int id, String nombre, LocalDate fecha) {
-        this.id = id;
+    public Reporte() {
+        this.id = UUID.randomUUID().toString();;
+    }
+    public Reporte(String nombre, LocalDate fecha) {
+        this.id = UUID.randomUUID().toString();;
         this.nombre = nombre;
         this.fecha = fecha;
     }
 
-    public int getid() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

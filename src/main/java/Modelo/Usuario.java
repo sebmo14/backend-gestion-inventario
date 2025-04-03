@@ -1,4 +1,5 @@
 package Modelo;
+import java.util.UUID;
 
 public abstract class Usuario {
     //Atributos
@@ -6,16 +7,22 @@ public abstract class Usuario {
     protected String apellidos;
     protected int edad;
     protected String correo;
-    protected int id;
+    protected String id;
     protected String contraseña;
     
     //Constructores
-    public Usuario(String nombre, String apellidos, int edad, String correo, int id, String contraseña) {
+
+
+    public Usuario() {
+        this.id = UUID.randomUUID().toString();;
+    }
+
+    public Usuario(String nombre, String apellidos, int edad, String correo, String contraseña) {
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.edad = edad;
         this.correo = correo;
-        this.id = id;
+        this.id = UUID.randomUUID().toString();;
         this.contraseña = contraseña;
     }
     
@@ -53,11 +60,11 @@ public abstract class Usuario {
         this.correo = correo;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

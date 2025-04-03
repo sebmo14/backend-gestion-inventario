@@ -11,8 +11,15 @@ public class Trabajador extends Usuario {
     private int añosExpe;
     
     //Constructor
-    public Trabajador(double salario, int añosExpe, String nombre, String apellidos, int edad, String correo, int id, String contraseña) {
-        super(nombre, apellidos, edad, correo, id, contraseña);
+
+
+    public Trabajador(String nombre, String apellidos, int edad, String correo, String contraseña, double salario, int añosExpe) {
+        super(nombre, apellidos, edad, correo, contraseña);
+        this.salario = salario;
+        this.añosExpe = añosExpe;
+    }
+
+    public Trabajador(double salario, int añosExpe) {
         this.salario = salario;
         this.añosExpe = añosExpe;
     }

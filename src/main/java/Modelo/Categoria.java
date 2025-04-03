@@ -2,16 +2,21 @@ package Modelo;
 
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class Categoria {
 
     String nombre, descripcion;
-    int Id;
+    String id;
     LocalDate fechaCreacion;
 
-    public Categoria(String nombre, int Id) {
+    public Categoria() {
+        this.id = UUID.randomUUID().toString();;
+    }
+
+    public Categoria(String nombre) {
         this.nombre = nombre;
-        this.Id = Id;
+        this.id = id;
     }
 
     public String getNombre() {
@@ -22,12 +27,12 @@ public class Categoria {
         this.nombre = nombre;
     }
 
-    public int getId() {
-        return Id;
+    public String getId() {
+        return id;
     }
 
-    public void setId(int Id) {
-        this.Id = Id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getDescripcion() {
@@ -51,7 +56,7 @@ public class Categoria {
         return "Categoria{" +
                 "nombre='" + nombre + '\'' +
                 ", descripcion='" + descripcion + '\'' +
-                ", Id=" + Id +
+                ", id=" + id +
                 ", fechaCreacion=" + fechaCreacion +
                 '}';
     }
