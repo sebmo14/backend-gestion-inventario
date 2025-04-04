@@ -11,12 +11,14 @@ public class Categoria {
     LocalDate fechaCreacion;
 
     public Categoria() {
-        this.id = UUID.randomUUID().toString();;
+        this.id = UUID.randomUUID().toString();
     }
 
-    public Categoria(String nombre) {
+    public Categoria(String nombre, String descripcion, LocalDate fechaCreacion) {
         this.nombre = nombre;
-        this.id = id;
+        this.descripcion = descripcion;
+        this.id = UUID.randomUUID().toString();
+        this.fechaCreacion = fechaCreacion;
     }
 
     public String getNombre() {
