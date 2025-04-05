@@ -2,6 +2,9 @@ package Controladores;
 
 import Modelo.Trabajador;
 import Servicios.TrabajadorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/trabajadores")
+@Tag(name = "Trabajadores", description = "Operaciones relacionadas con los trabajadores")
 public class TrabajadorController {
 
     private final TrabajadorService trabajadorService;
@@ -21,63 +25,58 @@ public class TrabajadorController {
     }
 
     @GetMapping
+    @Operation(summary = "Obtener todos los trabajadores")
     public ResponseEntity<List<Trabajador>> getAllTrabajadores() {
-        List<Trabajador> trabajadores = trabajadorService.findAll();
-        return new ResponseEntity<>(trabajadores, HttpStatus.OK);
+        return new ResponseEntity<>(trabajadorService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Obtener un trabajador por ID")
     public ResponseEntity<Trabajador> getTrabajador(@PathVariable String id) {
         Trabajador trabajador = trabajadorService.findById(id);
-        if (trabajador != null) {
-            return new ResponseEntity<>(trabajador, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return (trabajador != null) ? new ResponseEntity<>(trabajador, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
+    @Operation(summary = "Crear un nuevo trabajador")
     public ResponseEntity<Trabajador> createTrabajador(@RequestBody Trabajador trabajador) {
-        Trabajador newTrabajador = trabajadorService.save(trabajador);
-        return new ResponseEntity<>(newTrabajador, HttpStatus.CREATED);
+        return new ResponseEntity<>(trabajadorService.save(trabajador), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Actualizar un trabajador existente")
     public ResponseEntity<Trabajador> updateTrabajador(@PathVariable String id, @RequestBody Trabajador trabajador) {
-        Trabajador existingTrabajador = trabajadorService.findById(id);
-        if (existingTrabajador != null) {
+        Trabajador existente = trabajadorService.findById(id);
+        if (existente != null) {
             trabajador.setId(id);
-            Trabajador updatedTrabajador = trabajadorService.update(trabajador);
-            return new ResponseEntity<>(updatedTrabajador, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(trabajadorService.update(trabajador), HttpStatus.OK);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar un trabajador por ID")
     public ResponseEntity<Void> deleteTrabajador(@PathVariable String id) {
-        Trabajador existingTrabajador = trabajadorService.findById(id);
-        if (existingTrabajador != null) {
+        Trabajador trabajador = trabajadorService.findById(id);
+        if (trabajador != null) {
             trabajadorService.deleteById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/buscar")
+    @Operation(summary = "Buscar trabajadores por nombre")
     public ResponseEntity<List<Trabajador>> buscarTrabajador(@RequestParam String nombre) {
-        List<Trabajador> trabajadores = trabajadorService.buscarPorFiltros(nombre);
-        return new ResponseEntity<>(trabajadores, HttpStatus.OK);
+        return new ResponseEntity<>(trabajadorService.buscarPorFiltros(nombre), HttpStatus.OK);
     }
 
     @GetMapping("/auth")
+    @Operation(summary = "Obtener un trabajador por token de autorización")
     public ResponseEntity<Trabajador> getTrabajadorByToken(@RequestHeader("Authorization") String authToken) {
         Trabajador trabajador = trabajadorService.findByAuthToken(authToken);
-        if (trabajador != null) {
-            return new ResponseEntity<>(trabajador, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        return (trabajador != null) ? new ResponseEntity<>(trabajador, HttpStatus.OK)
+                : new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }

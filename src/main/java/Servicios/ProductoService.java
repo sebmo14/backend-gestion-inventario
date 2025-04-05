@@ -21,7 +21,7 @@ public class ProductoService {
     @Autowired
     public ProductoService(ProductoRepository productoRepository) {
         this.productoRepository = productoRepository;
-        //initSampleData();
+        initSampleData();
     }
 
     private void initSampleData() {

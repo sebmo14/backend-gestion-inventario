@@ -1,8 +1,7 @@
 package Servicios;
 
 import Modelo.Trabajador;
-import Modelo.Usuario;
-import Repositorios.UsuarioRepository;
+import Repositorios.TrabajadorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +10,11 @@ import java.util.List;
 @Service
 
 public class TrabajadorService {
-    private final UsuarioRepository usuarioRepository;
+    private final TrabajadorRepository trabajadorRepository;
 
     @Autowired
-    public TrabajadorService(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+    public TrabajadorService(TrabajadorRepository trabajadorRepository) {
+        this.trabajadorRepository = trabajadorRepository;
         initSampleData();
     }
 
@@ -32,30 +31,30 @@ public class TrabajadorService {
     }
 
     public Trabajador save(Trabajador trabajador) {
-        return (Trabajador) usuarioRepository.save(trabajador);
+        return (Trabajador) trabajadorRepository.save(trabajador);
     }
 
-    public Usuario findById(String id) {
-        return usuarioRepository.findTrabajadorById(id);
+    public Trabajador findById(String id) {
+        return trabajadorRepository.findById(id);
     }
 
     public List<Trabajador> findAll() {
-        return usuarioRepository.findAllTrabajadores();
+        return trabajadorRepository.findAll();
     }
 
     public Trabajador update(Trabajador trabajador) {
-        return usuarioRepository.updateTrabajador(trabajador);
+        return trabajadorRepository.update(trabajador);
     }
 
     public void deleteById(String id) {
-        usuarioRepository.deleteTrabajadorById(id);
+        trabajadorRepository.deleteById(id);
     }
 
-    public List<Usuario> buscarPorFiltros(String nombre, String email) {
-        return usuarioRepository.buscarPorFiltros(nombre, email);
+    public List<Trabajador> buscarPorFiltros(String nombre) {
+        return trabajadorRepository.buscarPorFiltros(nombre);
     }
 
-    public Usuario findByAuthToken(String authToken) {
-        return usuarioRepository.findByAuthToken(authToken);
+    public Trabajador findByAuthToken(String authToken) {
+        return trabajadorRepository.findByAuthToken(authToken);
     }
 }

@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("/api/productos")
 public class ProductoController {
+
     private final ProductoService productoService;
 
     @Autowired
@@ -21,13 +21,13 @@ public class ProductoController {
         this.productoService = productoService;
     }
 
-    @GetMapping
+    @GetMapping("/obtener")
     public ResponseEntity<List<Producto>> getAllProductos() {
         List<Producto> productos = productoService.findAll();
         return new ResponseEntity<>(productos, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/obtener/{id}")
     public ResponseEntity<Producto> getProductoById(@PathVariable String id) {
         Producto producto = productoService.findById(id);
         if (producto != null) {
@@ -37,14 +37,14 @@ public class ProductoController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Producto> createUsuario(@RequestBody Producto producto) {
+    @PostMapping("/crear")
+    public ResponseEntity<Producto> createProducto(@RequestBody Producto producto) {
         Producto newProducto = productoService.save(producto);
         return new ResponseEntity<>(newProducto, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Producto> updateUsuario(@PathVariable String id, @RequestBody Producto producto) {
+    @PutMapping("/actualizar/{id}")
+    public ResponseEntity<Producto> updateProducto(@PathVariable String id, @RequestBody Producto producto) {
         Producto existingProducto = productoService.findById(id);
         if (existingProducto != null) {
             producto.setId(id);
@@ -55,7 +55,7 @@ public class ProductoController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<Void> deleteProducto(@PathVariable String id) {
         Producto existingProducto = productoService.findById(id);
         if (existingProducto != null) {
@@ -67,14 +67,15 @@ public class ProductoController {
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<List<Producto>> buscarProducto(@RequestParam String nombre,
-                                                         @RequestParam(required = false) String categoria) {
+    public ResponseEntity<List<Producto>> buscarProducto(
+            @RequestParam String nombre,
+            @RequestParam(required = false) String categoria) {
         List<Producto> productos = productoService.buscarPorFiltros(nombre, categoria);
         return new ResponseEntity<>(productos, HttpStatus.OK);
     }
 
     @GetMapping("/auth")
-    public ResponseEntity<Producto> getUserByToken(@RequestHeader("Authorization") String authToken) {
+    public ResponseEntity<Producto> getProductoByToken(@RequestHeader("Authorization") String authToken) {
         Producto producto = productoService.findByAuthToken(authToken);
         if (producto != null) {
             return new ResponseEntity<>(producto, HttpStatus.OK);

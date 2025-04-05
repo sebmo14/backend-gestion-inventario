@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("/api/categorias")
 public class CategoriaController {
     private final CategoriaService categoriaService;
 
@@ -29,23 +28,21 @@ public class CategoriaController {
     @GetMapping("/{id}")
     public ResponseEntity<Categoria> getCategoriaById(@PathVariable String id) {
         Categoria categoria = categoriaService.findById(id);
-        if (categoria != null) {
-            return new ResponseEntity<>(categoria, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return (categoria != null) ?
+                new ResponseEntity<>(categoria, HttpStatus.OK) :
+                new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
-    public ResponseEntity<Categoria> createUsuario(@RequestBody Categoria categoria) {
+    public ResponseEntity<Categoria> createCategoria(@RequestBody Categoria categoria) {
         Categoria newCategoria = categoriaService.save(categoria);
         return new ResponseEntity<>(newCategoria, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Categoria> updateUsuario(@PathVariable String id, @RequestBody Categoria categoria) {
-        Categoria existingUsuario = categoriaService.findById(id);
-        if (existingUsuario != null) {
+    public ResponseEntity<Categoria> updateCategoria(@PathVariable String id, @RequestBody Categoria categoria) {
+        Categoria existingCategoria = categoriaService.findById(id);
+        if (existingCategoria != null) {
             categoria.setId(id);
             Categoria updatedCategoria = categoriaService.update(categoria);
             return new ResponseEntity<>(updatedCategoria, HttpStatus.OK);
@@ -72,12 +69,10 @@ public class CategoriaController {
     }
 
     @GetMapping("/auth")
-    public ResponseEntity<Categoria> getUserByToken(@RequestHeader("Authorization") String authToken) {
+    public ResponseEntity<Categoria> getCategoriaByToken(@RequestHeader("Authorization") String authToken) {
         Categoria categoria = categoriaService.findByAuthToken(authToken);
-        if (categoria != null) {
-            return new ResponseEntity<>(categoria, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        return (categoria != null) ?
+                new ResponseEntity<>(categoria, HttpStatus.OK) :
+                new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }
