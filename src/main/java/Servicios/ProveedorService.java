@@ -18,7 +18,7 @@ public class ProveedorService {
     @Autowired
     public ProveedorService(ProveedorRepository proveedorRepository) {
         this.proveedorRepository = proveedorRepository;
-        //initSampleData();
+        initSampleData();
     }
 
 

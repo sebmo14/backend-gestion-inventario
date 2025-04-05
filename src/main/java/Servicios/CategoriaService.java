@@ -18,7 +18,7 @@ public class CategoriaService {
     @Autowired
     public CategoriaService(CategoriaRepository categoriaRepository) {
         this.categoriaRepository = categoriaRepository;
-        //initSampleData();
+        initSampleData();
     }
 
 

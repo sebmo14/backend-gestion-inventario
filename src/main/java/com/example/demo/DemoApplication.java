@@ -2,8 +2,13 @@ package com.example.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import Controladores.*;
+import Modelo.*;
+import Repositorios.*;
+import Servicios.*;
 
-@SpringBootApplication
+
+@SpringBootApplication(scanBasePackages = {"Controladores", "Servicios", "Modelo", "Repositorios"})
 public class DemoApplication {
 
 	public static void main(String[] args) {

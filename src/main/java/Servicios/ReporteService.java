@@ -2,7 +2,6 @@ package Servicios;
 
 import Modelo.Reporte;
 import Repositorios.ReporteRepository;
-import Repositorios.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,7 @@ public class ReporteService {
     @Autowired
     public ReporteService(ReporteRepository reporteRepository) {
         this.reporteRepository = reporteRepository;
-        //initSampleData();
+        initSampleData();
     }
 
     private void initSampleData() {
