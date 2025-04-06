@@ -2,6 +2,7 @@ package Repositorios;
 
 import Modelo.Categoria;
 import Modelo.Producto;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -12,6 +13,17 @@ import java.util.List;
 public class ProductoRepository {
     private final List<Producto> baseDeDatos = new ArrayList<>();
     private final List<String> authTokens = new ArrayList<>();
+
+    private static boolean initialized = false;
+    @PostConstruct
+    public void init() {
+        if (!initialized) {
+            System.out.println("Inicializando repositorio de productos");
+
+            initialized = true;
+        }
+    }
+
 
     public Producto save(Producto producto) {
         baseDeDatos.add(producto);

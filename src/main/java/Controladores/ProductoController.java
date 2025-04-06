@@ -51,7 +51,7 @@ public class ProductoController {
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/crear")
+    @PostMapping
     @Operation(summary = "Crear un nuevo producto", description = "Crea y registra un nuevo producto.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Producto creado correctamente")
@@ -59,11 +59,12 @@ public class ProductoController {
     public ResponseEntity<Producto> createProducto(
             @Parameter(description = "Objeto Producto que se desea crear", required = true)
             @RequestBody Producto producto) {
+
         Producto newProducto = productoService.save(producto);
         return new ResponseEntity<>(newProducto, HttpStatus.CREATED);
     }
 
-    @PutMapping("/actualizar/{id}")
+    @PutMapping("/{id}")
     @Operation(summary = "Actualizar un producto", description = "Actualiza los datos de un producto existente usando su ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Producto actualizado correctamente"),
@@ -84,7 +85,7 @@ public class ProductoController {
         }
     }
 
-    @DeleteMapping("/eliminar/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar un producto", description = "Elimina un producto dado su ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Producto eliminado correctamente"),

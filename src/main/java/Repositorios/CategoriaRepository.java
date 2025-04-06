@@ -39,6 +39,7 @@ public class CategoriaRepository {
         }
     }
 
+
     public Categoria update(Categoria categoria) {
         for (int i = 0; i < baseDeDatos.size(); i++) {
             if (baseDeDatos.get(i).getId().equals(categoria.getId())) {
