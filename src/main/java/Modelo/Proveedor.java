@@ -8,18 +8,18 @@ import java.util.UUID;
 
 
 public class Proveedor {
-    String id, Nombre, Email, Direccion;
+    String id, nombre, email, direccion;
     int numeroTlf;
 
     public Proveedor() {
         this.id = UUID.randomUUID().toString();
     }
 
-    public Proveedor(String Nombre, String Email, String Direccion, int numeroTlf) {
+    public Proveedor(String nombre, String email, String direccion, int numeroTlf) {
         this.id = UUID.randomUUID().toString();;
-        this.Nombre = Nombre;
-        this.Email = Email;
-        this.Direccion = Direccion;
+        this.nombre = nombre;
+        this.email = email;
+        this.direccion = direccion;
         this.numeroTlf = numeroTlf;
     }
 
@@ -32,27 +32,27 @@ public class Proveedor {
     }
 
     public String getNombre() {
-        return Nombre;
+        return nombre;
     }
 
     public void setNombre(String Nombre) {
-        this.Nombre = Nombre;
+        this.nombre = Nombre;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String Email) {
-        this.Email = Email;
+        this.email = Email;
     }
 
     public String getDireccion() {
-        return Direccion;
+        return direccion;
     }
 
     public void setDireccion(String Direccion) {
-        this.Direccion = Direccion;
+        this.direccion = Direccion;
     }
 
     public int getNumeroTlf() {
@@ -67,9 +67,9 @@ public class Proveedor {
     public String toString() {
         return "Proveedor{" +
                 "id='" + id + '\'' +
-                ", Nombre='" + Nombre + '\'' +
-                ", Email='" + Email + '\'' +
-                ", Direccion='" + Direccion + '\'' +
+                ", Nombre='" + nombre + '\'' +
+                ", Email='" + email + '\'' +
+                ", direccion='" + direccion + '\'' +
                 ", numeroTlf=" + numeroTlf +
                 '}';
     }
