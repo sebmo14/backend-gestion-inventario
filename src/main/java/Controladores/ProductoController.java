@@ -27,7 +27,7 @@ public class ProductoController {
         this.productoService = productoService;
     }
 
-    @GetMapping("/obtener")
+    @GetMapping
     @Operation(summary = "Obtener todos los productos", description = "Devuelve una lista de todos los productos disponibles.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de productos obtenida correctamente")
@@ -37,7 +37,7 @@ public class ProductoController {
         return new ResponseEntity<>(productos, HttpStatus.OK);
     }
 
-    @GetMapping("/obtener/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Obtener un producto por ID", description = "Devuelve los detalles de un producto dado su ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Producto encontrado"),
