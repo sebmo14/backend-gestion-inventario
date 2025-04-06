@@ -76,4 +76,13 @@ public class TrabajadorRepository {
         return null;
     }
 
+    public Trabajador findByEmail(String email) {
+        for (Trabajador trabajador : baseDeDatos) {
+            if (trabajador.getCorreo().equals(email)) {
+                return trabajador;
+            }
+        }
+        return null;
+    }
+
 }

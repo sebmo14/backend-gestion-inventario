@@ -3,6 +3,9 @@ package Controladores;
 import Modelo.Reporte;
 import Servicios.ReporteService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,29 +27,51 @@ public class ReporteController {
     }
 
     @GetMapping
-    @Operation(summary = "Obtener todos los reportes")
+    @Operation(summary = "Obtener todos los reportes", description = "Devuelve una lista con todos los reportes registrados.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de reportes obtenida correctamente")
+    })
     public ResponseEntity<List<Reporte>> getAllReportes() {
         return new ResponseEntity<>(reporteService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Obtener un reporte por ID")
-    public ResponseEntity<Reporte> getReporte(@PathVariable String id) {
+    @Operation(summary = "Obtener un reporte por ID", description = "Busca y devuelve un reporte usando su ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Reporte encontrado"),
+            @ApiResponse(responseCode = "404", description = "Reporte no encontrado")
+    })
+    public ResponseEntity<Reporte> getReporte(
+            @Parameter(description = "ID del reporte que se desea buscar", required = true)
+            @PathVariable String id) {
         Reporte reporte = reporteService.findById(id);
         return (reporte != null) ? new ResponseEntity<>(reporte, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
-    @Operation(summary = "Crear un nuevo reporte")
-    public ResponseEntity<Reporte> createReporte(@RequestBody Reporte reporte) {
+    @Operation(summary = "Crear un nuevo reporte", description = "Registra un nuevo reporte en el sistema.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Reporte creado exitosamente")
+    })
+    public ResponseEntity<Reporte> createReporte(
+            @Parameter(description = "Objeto Reporte a crear", required = true)
+            @RequestBody Reporte reporte) {
         Reporte newReporte = reporteService.save(reporte);
         return new ResponseEntity<>(newReporte, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Actualizar un reporte existente")
-    public ResponseEntity<Reporte> updateReporte(@PathVariable String id, @RequestBody Reporte reporte) {
+    @Operation(summary = "Actualizar un reporte existente", description = "Actualiza los datos de un reporte existente por su ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Reporte actualizado correctamente"),
+            @ApiResponse(responseCode = "404", description = "Reporte no encontrado")
+    })
+    public ResponseEntity<Reporte> updateReporte(
+            @Parameter(description = "ID del reporte que se desea actualizar", required = true)
+            @PathVariable String id,
+            @Parameter(description = "Objeto Reporte actualizado", required = true)
+            @RequestBody Reporte reporte) {
         Reporte existingReporte = reporteService.findById(id);
         if (existingReporte != null) {
             reporte.setId(id);
@@ -57,8 +82,14 @@ public class ReporteController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Eliminar un reporte por ID")
-    public ResponseEntity<Void> deleteReporte(@PathVariable String id) {
+    @Operation(summary = "Eliminar un reporte por ID", description = "Elimina un reporte del sistema usando su ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Reporte eliminado correctamente"),
+            @ApiResponse(responseCode = "404", description = "Reporte no encontrado")
+    })
+    public ResponseEntity<Void> deleteReporte(
+            @Parameter(description = "ID del reporte que se desea eliminar", required = true)
+            @PathVariable String id) {
         Reporte existingReporte = reporteService.findById(id);
         if (existingReporte != null) {
             reporteService.deleteById(id);
@@ -68,8 +99,13 @@ public class ReporteController {
     }
 
     @GetMapping("/buscar")
-    @Operation(summary = "Buscar reportes por nombre (filtro)")
-    public ResponseEntity<List<Reporte>> buscarReporte(@RequestParam(required = false) String titulo) {
+    @Operation(summary = "Buscar reportes por título", description = "Busca reportes que contengan un texto en el título.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Reportes encontrados")
+    })
+    public ResponseEntity<List<Reporte>> buscarReporte(
+            @Parameter(description = "Título a buscar (puede ser parcial)", required = false)
+            @RequestParam(required = false) String titulo) {
         return new ResponseEntity<>(reporteService.buscarPorFiltros(titulo), HttpStatus.OK);
     }
 }

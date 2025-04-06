@@ -111,6 +111,7 @@ public class ProveedorController {
         return new ResponseEntity<>(proveedores, HttpStatus.OK);
     }
 
+
     @GetMapping("/auth")
     @Operation(summary = "Obtener proveedor por token", description = "Devuelve los datos del proveedor autenticado mediante token.")
     @ApiResponses(value = {

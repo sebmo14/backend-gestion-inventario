@@ -54,6 +54,10 @@ public class TrabajadorService {
         return trabajadorRepository.buscarPorFiltros(nombre);
     }
 
+    public Trabajador findByEmail(String email) {
+        return trabajadorRepository.findByEmail(email);
+    }
+
     public Trabajador findByAuthToken(String authToken) {
         return trabajadorRepository.findByAuthToken(authToken);
     }
