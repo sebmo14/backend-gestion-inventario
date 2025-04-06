@@ -8,7 +8,7 @@ import Repositorios.*;
 import Servicios.*;
 
 
-@SpringBootApplication(scanBasePackages = {"Controladores", "Servicios", "Modelo", "Repositorios"})
+@SpringBootApplication(scanBasePackages = {"Controladores", "Servicios", "Modelo", "Repositorios", "DTO"})
 public class DemoApplication {
 
 	public static void main(String[] args) {
