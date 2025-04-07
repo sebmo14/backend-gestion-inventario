@@ -1,6 +1,7 @@
 package Repositorios;
 
 import Modelo.Proveedor;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -11,6 +12,17 @@ import java.util.List;
 public class ProveedorRepository {
     private final List<Proveedor> baseDeDatos = new ArrayList<>();
     private final List<String> authTokens = new ArrayList<>();
+    private static boolean initialized = false;
+
+
+    @PostConstruct
+    public void init() {
+        if (!initialized) {
+            System.out.println("Inicializando repositorio de categorias");
+
+            initialized = true;
+        }
+    }
 
     public Proveedor save(Proveedor proveedor) {
         baseDeDatos.add(proveedor);

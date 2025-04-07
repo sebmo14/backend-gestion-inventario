@@ -1,5 +1,6 @@
 package Repositorios;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
 import Modelo.Categoria;
 import java.util.ArrayList;
@@ -10,6 +11,20 @@ import java.util.List;
 public class CategoriaRepository {
     private final List<Categoria> baseDeDatos = new ArrayList<>();
     private final List<String> authTokens = new ArrayList<>();
+
+    private static boolean initialized = false;
+
+
+    @PostConstruct
+    public void init() {
+        if (!initialized) {
+            System.out.println("Inicializando repositorio de categorias");
+
+            initialized = true;
+        }
+    }
+
+
 
     public Categoria save(Categoria categoria) {
         baseDeDatos.add(categoria);
