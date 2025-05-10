@@ -32,7 +32,7 @@ public class ReporteController {
             @ApiResponse(responseCode = "200", description = "Lista de reportes obtenida correctamente")
     })
     public ResponseEntity<List<Reporte>> getAllReportes() {
-        return new ResponseEntity<>(reporteService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(reporteService.obtenerTodosLosReportes(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -44,7 +44,7 @@ public class ReporteController {
     public ResponseEntity<Reporte> getReporte(
             @Parameter(description = "ID del reporte que se desea buscar", required = true)
             @PathVariable String id) {
-        Reporte reporte = reporteService.findById(id);
+        Reporte reporte = reporteService.obtenerReporte(id);
         return (reporte != null) ? new ResponseEntity<>(reporte, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -57,7 +57,7 @@ public class ReporteController {
     public ResponseEntity<Reporte> createReporte(
             @Parameter(description = "Objeto Reporte a crear", required = true)
             @RequestBody Reporte reporte) {
-        Reporte newReporte = reporteService.save(reporte);
+        Reporte newReporte = reporteService.guardarReporte(reporte);
         return new ResponseEntity<>(newReporte, HttpStatus.CREATED);
     }
 
@@ -72,10 +72,10 @@ public class ReporteController {
             @PathVariable String id,
             @Parameter(description = "Objeto Reporte actualizado", required = true)
             @RequestBody Reporte reporte) {
-        Reporte existingReporte = reporteService.findById(id);
+        Reporte existingReporte = reporteService.obtenerReporte(id);
         if (existingReporte != null) {
             reporte.setId(id);
-            Reporte updatedReporte = reporteService.update(reporte);
+            Reporte updatedReporte = reporteService.guardarReporte(reporte);
             return new ResponseEntity<>(updatedReporte, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -90,9 +90,9 @@ public class ReporteController {
     public ResponseEntity<Void> deleteReporte(
             @Parameter(description = "ID del reporte que se desea eliminar", required = true)
             @PathVariable String id) {
-        Reporte existingReporte = reporteService.findById(id);
+        Reporte existingReporte = reporteService.obtenerReporte(id);
         if (existingReporte != null) {
-            reporteService.deleteById(id);
+            reporteService.eliminarReporte(existingReporte);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

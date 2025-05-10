@@ -1,41 +1,52 @@
-
 package Modelo;
 
+import jakarta.persistence.*;
 import java.util.UUID;
 
-/**
- *
- * @author MI PC
- */
+@Entity
+@Table(name = "trabajadores")
 public class Trabajador {
-    //Atributos
-    private String nombre;
-    private String apellidos;
-    private int edad;
-    private String correo;
+
+    @Id
     private String id;
+
+    @Column(nullable = false)
+    private String nombre;
+
+    @Column(nullable = false)
+    private String apellidos;
+
+    @Column(nullable = false)
+    private int edad;
+
+    @Column(nullable = false, unique = true)
+    private String correo;
+
+    @Column(nullable = false)
     private String contraseña;
+
+    @Column(nullable = false)
     private double salario;
+
+    @Column(nullable = false)
     private int añosExpe;
-
-    //Constructor
-
-    public Trabajador(String nombre, String apellidos, int edad, String correo, String contraseña, double salario, int añosExpe) {
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.edad = edad;
-        this.correo = correo;
-        this.id = UUID.randomUUID().toString();
-        this.contraseña = contraseña;
-        this.salario = salario;
-        this.añosExpe = añosExpe;
-    }
 
     public Trabajador() {
         this.id = UUID.randomUUID().toString();
     }
 
+    public Trabajador(String nombre, String apellidos, int edad, String correo, String contraseña, double salario, int añosExpe) {
+        this.id = UUID.randomUUID().toString();
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.edad = edad;
+        this.correo = correo;
+        this.contraseña = contraseña;
+        this.salario = salario;
+        this.añosExpe = añosExpe;
+    }
 
+    // Getters y Setters
     public String getNombre() {
         return nombre;
     }
@@ -103,11 +114,11 @@ public class Trabajador {
     @Override
     public String toString() {
         return "Trabajador{" +
-                "nombre='" + nombre + '\'' +
+                "id='" + id + '\'' +
+                ", nombre='" + nombre + '\'' +
                 ", apellidos='" + apellidos + '\'' +
                 ", edad=" + edad +
                 ", correo='" + correo + '\'' +
-                ", id='" + id + '\'' +
                 ", contraseña='" + contraseña + '\'' +
                 ", salario=" + salario +
                 ", añosExpe=" + añosExpe +
