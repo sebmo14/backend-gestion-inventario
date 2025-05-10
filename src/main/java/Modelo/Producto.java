@@ -1,30 +1,46 @@
 package Modelo;
 
+import jakarta.persistence.*;
 import java.util.UUID;
 
+@Entity
+@Table(name = "productos")
 public class Producto {
-    String id;
-    String nombre, descripcion;
-    Categoria categoria;
-    double precio;
 
-    public Producto() {
-        this.id = UUID.randomUUID().toString();;
-    }
+    @Id
+    private Integer id;
 
-    public Producto(String nombre, String descripcion, Categoria categoria, double precio) {
-        this.id = UUID.randomUUID().toString();;
+    @Column(nullable = false)
+    private String nombre;
+
+    @Column
+    private String descripcion;
+
+    @ManyToOne
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
+
+    @Column(nullable = false)
+    private double precio;
+
+
+    public Producto(Integer id, String nombre, String descripcion, Categoria categoria, double precio) {
+        this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.categoria = categoria;
         this.precio = precio;
     }
 
-    public String getId() {
+    public Producto() {
+    }
+
+    // Getters y Setters
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -71,5 +87,3 @@ public class Producto {
                 '}';
     }
 }
-    
-    

@@ -32,7 +32,7 @@ public class TrabajadorController {
             @ApiResponse(responseCode = "200", description = "Lista obtenida con éxito")
     })
     public ResponseEntity<List<Trabajador>> getAllTrabajadores() {
-        return new ResponseEntity<>(trabajadorService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(trabajadorService.obtenerTodosLosTrabajadores(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -42,7 +42,7 @@ public class TrabajadorController {
             @ApiResponse(responseCode = "404", description = "Trabajador no encontrado")
     })
     public ResponseEntity<Trabajador> getTrabajador(@PathVariable String id) {
-        Trabajador trabajador = trabajadorService.findById(id);
+        Trabajador trabajador = trabajadorService.obtenerTrabajador(id);
         return (trabajador != null) ? new ResponseEntity<>(trabajador, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -53,7 +53,7 @@ public class TrabajadorController {
             @ApiResponse(responseCode = "201", description = "Trabajador creado correctamente")
     })
     public ResponseEntity<Trabajador> createTrabajador(@RequestBody Trabajador trabajador) {
-        return new ResponseEntity<>(trabajadorService.save(trabajador), HttpStatus.CREATED);
+        return new ResponseEntity<>(trabajadorService.guardarTrabajador(trabajador), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -63,10 +63,10 @@ public class TrabajadorController {
             @ApiResponse(responseCode = "404", description = "Trabajador no encontrado")
     })
     public ResponseEntity<Trabajador> updateTrabajador(@PathVariable String id, @RequestBody Trabajador trabajador) {
-        Trabajador existente = trabajadorService.findById(id);
+        Trabajador existente = trabajadorService.obtenerTrabajador(id);
         if (existente != null) {
             trabajador.setId(id);
-            return new ResponseEntity<>(trabajadorService.update(trabajador), HttpStatus.OK);
+            return new ResponseEntity<>(trabajadorService.guardarTrabajador(trabajador), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -78,9 +78,9 @@ public class TrabajadorController {
             @ApiResponse(responseCode = "404", description = "Trabajador no encontrado")
     })
     public ResponseEntity<Void> deleteTrabajador(@PathVariable String id) {
-        Trabajador trabajador = trabajadorService.findById(id);
+        Trabajador trabajador = trabajadorService.obtenerTrabajador(id);
         if (trabajador != null) {
-            trabajadorService.deleteById(id);
+            trabajadorService.eliminarTrabajador(trabajador);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -107,17 +107,5 @@ public class TrabajadorController {
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-    }
-
-    @GetMapping("/auth")
-    @Operation(summary = "Obtener un trabajador por token", description = "Devuelve el trabajador correspondiente a un token de autorización.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Token válido"),
-            @ApiResponse(responseCode = "401", description = "Token inválido o inexistente")
-    })
-    public ResponseEntity<Trabajador> getTrabajadorByToken(@RequestHeader("Authorization") String authToken) {
-        Trabajador trabajador = trabajadorService.findByAuthToken(authToken);
-        return (trabajador != null) ? new ResponseEntity<>(trabajador, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }

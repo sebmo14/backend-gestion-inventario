@@ -33,7 +33,7 @@ public class ProveedorController {
             @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
     public ResponseEntity<List<Proveedor>> getAllProveedores() {
-        List<Proveedor> proveedores = proveedorService.findAll();
+        List<Proveedor> proveedores = proveedorService.obtenerTodosLosProveedores();
         return new ResponseEntity<>(proveedores, HttpStatus.OK);
     }
 
@@ -45,7 +45,7 @@ public class ProveedorController {
     })
     public ResponseEntity<Proveedor> getProveedor(
             @PathVariable @Parameter(description = "ID del proveedor") String id) {
-        Proveedor proveedor = proveedorService.findById(id);
+        Proveedor proveedor = proveedorService.obtenerProveedor(id);
         return proveedor != null ?
                 new ResponseEntity<>(proveedor, HttpStatus.OK) :
                 new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -59,7 +59,7 @@ public class ProveedorController {
     })
     public ResponseEntity<Proveedor> createProveedor(
             @RequestBody @Parameter(description = "Datos del proveedor a crear") Proveedor proveedor) {
-        Proveedor newProveedor = proveedorService.save(proveedor);
+        Proveedor newProveedor = proveedorService.guardarProveedor(proveedor);
         return new ResponseEntity<>(newProveedor, HttpStatus.CREATED);
     }
 
@@ -72,10 +72,10 @@ public class ProveedorController {
     public ResponseEntity<Proveedor> updateProveedor(
             @PathVariable @Parameter(description = "ID del proveedor") String id,
             @RequestBody @Parameter(description = "Nuevos datos del proveedor") Proveedor proveedor) {
-        Proveedor existingProveedor = proveedorService.findById(id);
+        Proveedor existingProveedor = proveedorService.obtenerProveedor(id);
         if (existingProveedor != null) {
             proveedor.setId(id);
-            Proveedor updatedProveedor = proveedorService.update(proveedor);
+            Proveedor updatedProveedor = proveedorService.guardarProveedor(proveedor);
             return new ResponseEntity<>(updatedProveedor, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -90,9 +90,9 @@ public class ProveedorController {
     })
     public ResponseEntity<Void> deleteProveedor(
             @PathVariable @Parameter(description = "ID del proveedor") String id) {
-        Proveedor existingProveedor = proveedorService.findById(id);
+        Proveedor existingProveedor = proveedorService.obtenerProveedor(id);
         if (existingProveedor != null) {
-            proveedorService.deleteById(id);
+            proveedorService.eliminarProveedor(existingProveedor);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -109,20 +109,5 @@ public class ProveedorController {
             @RequestParam @Parameter(description = "Nombre del proveedor") String nombre) {
         List<Proveedor> proveedores = proveedorService.buscarPorFiltros(nombre);
         return new ResponseEntity<>(proveedores, HttpStatus.OK);
-    }
-
-
-    @GetMapping("/auth")
-    @Operation(summary = "Obtener proveedor por token", description = "Devuelve los datos del proveedor autenticado mediante token.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Proveedor autenticado encontrado"),
-            @ApiResponse(responseCode = "401", description = "Token inválido o no autorizado")
-    })
-    public ResponseEntity<Proveedor> getProveedorByToken(
-            @RequestHeader("Authorization") @Parameter(description = "Token de autorización") String authToken) {
-        Proveedor proveedor = proveedorService.findByAuthToken(authToken);
-        return proveedor != null ?
-                new ResponseEntity<>(proveedor, HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }

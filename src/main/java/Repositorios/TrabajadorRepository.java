@@ -1,88 +1,38 @@
-//NO NECESARIO?
-//TODO
 package Repositorios;
 
 import Modelo.Trabajador;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
-
 @Repository
-
 public class TrabajadorRepository {
-    private final List<Trabajador> baseDeDatos = new ArrayList<>();
-    private final List<String> authTokens = new ArrayList<>();
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Transactional
     public Trabajador save(Trabajador trabajador) {
-        baseDeDatos.add(trabajador);
-        authTokens.add(trabajador.getId());
-        return trabajador;
+        if (trabajador.getId() == null) {
+            entityManager.persist(trabajador); // Crear un nuevo trabajador
+            return trabajador;
+        } else {
+            entityManager.merge(trabajador); // Actualizar trabajador
+            return trabajador;
+        }
     }
 
     public Trabajador findById(String id) {
-        for (Trabajador trabajador : baseDeDatos) {
-            if (trabajador.getId().equals(id)) {
-                return trabajador;
-            }
-        }
-        return null;
+        return entityManager.find(Trabajador.class, id);
     }
 
     public List<Trabajador> findAll() {
-        return new ArrayList<>(baseDeDatos);
+        return entityManager.createQuery("SELECT t FROM Trabajador t", Trabajador.class).getResultList();
     }
 
-    public void deleteById(String id) {
-        for (int i = 0; i < baseDeDatos.size(); i++) {
-            if (baseDeDatos.get(i).getId().equals(id)) {
-                baseDeDatos.remove(i);
-                return;
-            }
-        }
+    public void delete(Trabajador trabajador) {
+        entityManager.remove(entityManager.contains(trabajador) ? trabajador : entityManager.merge(trabajador));
     }
-
-    public Trabajador update(Trabajador trabajador) {
-        for (int i = 0; i < baseDeDatos.size(); i++) {
-            if (baseDeDatos.get(i).getId().equals(trabajador.getId())) {
-                baseDeDatos.set(i, trabajador);
-                return trabajador;
-            }
-        }
-        return null;
-    }
-
-    public List<Trabajador> buscarPorFiltros(String nombre) {
-        List<Trabajador> resultado = new ArrayList<>();
-        for (Trabajador trabajador : baseDeDatos) {
-            boolean coincideNombre = (nombre == null || trabajador.getNombre().contains(nombre));
-            if (coincideNombre) {
-                resultado.add(trabajador);
-            }
-        }
-        return resultado;
-    }
-
-    public Trabajador findByAuthToken(String authToken) {
-        for (String token : authTokens) {
-            if (token.equals(authToken)) {
-                for (Trabajador trabajador : baseDeDatos) {
-                    if (trabajador.getId().equals(token)) {
-                        return trabajador;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    public Trabajador findByEmail(String email) {
-        for (Trabajador trabajador : baseDeDatos) {
-            if (trabajador.getCorreo().equals(email)) {
-                return trabajador;
-            }
-        }
-        return null;
-    }
-
 }

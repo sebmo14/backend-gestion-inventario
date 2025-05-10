@@ -1,89 +1,38 @@
 package Repositorios;
 
 import Modelo.Proveedor;
-import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
-
 @Repository
-
 public class ProveedorRepository {
-    private final List<Proveedor> baseDeDatos = new ArrayList<>();
-    private final List<String> authTokens = new ArrayList<>();
-    private static boolean initialized = false;
 
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    @PostConstruct
-    public void init() {
-        if (!initialized) {
-            System.out.println("Inicializando repositorio de categorias");
-
-            initialized = true;
-        }
-    }
-
+    @Transactional
     public Proveedor save(Proveedor proveedor) {
-        baseDeDatos.add(proveedor);
-        authTokens.add(proveedor.getId());
-        return proveedor;
+        if (proveedor.getId() == null) {
+            entityManager.persist(proveedor); // Crear un nuevo proveedor
+            return proveedor;
+        } else {
+            entityManager.merge(proveedor); // Actualizar proveedor
+            return proveedor;
+        }
     }
 
     public Proveedor findById(String id) {
-        for (Proveedor proveedor : baseDeDatos) {
-            if (proveedor.getId().equals(id)) {
-                return proveedor;
-            }
-        }
-        return null;
+        return entityManager.find(Proveedor.class, id);
     }
 
     public List<Proveedor> findAll() {
-        return new ArrayList<>(baseDeDatos);
+        return entityManager.createQuery("SELECT p FROM Proveedor p", Proveedor.class).getResultList();
     }
 
-    public void deleteById(String id) {
-        for (int i = 0; i < baseDeDatos.size(); i++) {
-            if (baseDeDatos.get(i).getId().equals(id)) {
-                baseDeDatos.remove(i);
-                return;
-            }
-        }
+    public void delete(Proveedor proveedor) {
+        entityManager.remove(entityManager.contains(proveedor) ? proveedor : entityManager.merge(proveedor));
     }
-
-    public Proveedor update(Proveedor proveedor) {
-        for (int i = 0; i < baseDeDatos.size(); i++) {
-            if (baseDeDatos.get(i).getId().equals(proveedor.getId())) {
-                baseDeDatos.set(i, proveedor);
-                return proveedor;
-            }
-        }
-        return null;
-    }
-
-    public List<Proveedor> buscarPorFiltros(String nombre) {
-        List<Proveedor> resultado = new ArrayList<>();
-        for (Proveedor proveedor : baseDeDatos) {
-            boolean coincideNombre = (nombre == null || proveedor.getNombre().contains(nombre));
-            if (coincideNombre) {
-                resultado.add(proveedor);
-            }
-        }
-        return resultado;
-    }
-
-    public Proveedor findByAuthToken(String authToken) {
-        for (String token : authTokens) {
-            if (token.equals(authToken)) {
-                for (Proveedor proveedor : baseDeDatos) {
-                    if (proveedor.getId().equals(token)) {
-                        return proveedor;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
 }

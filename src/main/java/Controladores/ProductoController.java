@@ -33,7 +33,7 @@ public class ProductoController {
             @ApiResponse(responseCode = "200", description = "Lista de productos obtenida correctamente")
     })
     public ResponseEntity<List<Producto>> getAllProductos() {
-        List<Producto> productos = productoService.findAll();
+        List<Producto> productos = productoService.obtenerTodosLosProductos();
         return new ResponseEntity<>(productos, HttpStatus.OK);
     }
 
@@ -45,8 +45,8 @@ public class ProductoController {
     })
     public ResponseEntity<Producto> getProductoById(
             @Parameter(description = "ID del producto que se desea obtener", required = true)
-            @PathVariable String id) {
-        Producto producto = productoService.findById(id);
+            @PathVariable Integer id) {
+        Producto producto = productoService.obtenerProducto(id);
         return (producto != null) ? new ResponseEntity<>(producto, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -60,7 +60,7 @@ public class ProductoController {
             @Parameter(description = "Objeto Producto que se desea crear", required = true)
             @RequestBody Producto producto) {
 
-        Producto newProducto = productoService.save(producto);
+        Producto newProducto = productoService.guardarProducto(producto);
         return new ResponseEntity<>(newProducto, HttpStatus.CREATED);
     }
 
@@ -72,13 +72,13 @@ public class ProductoController {
     })
     public ResponseEntity<Producto> updateProducto(
             @Parameter(description = "ID del producto a actualizar", required = true)
-            @PathVariable String id,
+            @PathVariable Integer id,
             @Parameter(description = "Objeto Producto con la nueva información", required = true)
             @RequestBody Producto producto) {
-        Producto existingProducto = productoService.findById(id);
+        Producto existingProducto = productoService.obtenerProducto(id);
         if (existingProducto != null) {
             producto.setId(id);
-            Producto updatedProducto = productoService.update(producto);
+            Producto updatedProducto = productoService.guardarProducto(producto);
             return new ResponseEntity<>(updatedProducto, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -93,10 +93,10 @@ public class ProductoController {
     })
     public ResponseEntity<Void> deleteProducto(
             @Parameter(description = "ID del producto que se desea eliminar", required = true)
-            @PathVariable String id) {
-        Producto existingProducto = productoService.findById(id);
+            @PathVariable Integer id) {
+        Producto existingProducto = productoService.obtenerProducto(id);
         if (existingProducto != null) {
-            productoService.deleteById(id);
+            productoService.eliminarProducto(existingProducto);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -115,19 +115,5 @@ public class ProductoController {
             @RequestParam(required = false) String categoria) {
         List<Producto> productos = productoService.buscarPorFiltros(nombre, categoria);
         return new ResponseEntity<>(productos, HttpStatus.OK);
-    }
-
-    @GetMapping("/auth")
-    @Operation(summary = "Obtener producto por token", description = "Obtiene un producto asociado a un token de autorización.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Producto autorizado encontrado"),
-            @ApiResponse(responseCode = "401", description = "Token inválido o no autorizado")
-    })
-    public ResponseEntity<Producto> getProductoByToken(
-            @Parameter(description = "Token de autorización en el encabezado", required = true)
-            @RequestHeader("Authorization") String authToken) {
-        Producto producto = productoService.findByAuthToken(authToken);
-        return (producto != null) ? new ResponseEntity<>(producto, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }
