@@ -113,7 +113,7 @@ public class ProductoController {
             @RequestParam String nombre,
             @Parameter(description = "Categoría del producto (opcional)")
             @RequestParam(required = false) String categoria) {
-        List<Producto> productos = productoService.buscarPorFiltros(nombre, categoria);
+        List<Producto> productos = productoService.obtenerProductosPorFiltro(nombre, categoria);
         return new ResponseEntity<>(productos, HttpStatus.OK);
     }
 }

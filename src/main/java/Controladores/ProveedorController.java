@@ -44,7 +44,7 @@ public class ProveedorController {
             @ApiResponse(responseCode = "404", description = "Proveedor no encontrado")
     })
     public ResponseEntity<Proveedor> getProveedor(
-            @PathVariable @Parameter(description = "ID del proveedor") String id) {
+            @PathVariable @Parameter(description = "ID del proveedor") Integer id) {
         Proveedor proveedor = proveedorService.obtenerProveedor(id);
         return proveedor != null ?
                 new ResponseEntity<>(proveedor, HttpStatus.OK) :
@@ -70,7 +70,7 @@ public class ProveedorController {
             @ApiResponse(responseCode = "404", description = "Proveedor no encontrado")
     })
     public ResponseEntity<Proveedor> updateProveedor(
-            @PathVariable @Parameter(description = "ID del proveedor") String id,
+            @PathVariable @Parameter(description = "ID del proveedor") Integer id,
             @RequestBody @Parameter(description = "Nuevos datos del proveedor") Proveedor proveedor) {
         Proveedor existingProveedor = proveedorService.obtenerProveedor(id);
         if (existingProveedor != null) {
@@ -89,7 +89,7 @@ public class ProveedorController {
             @ApiResponse(responseCode = "404", description = "Proveedor no encontrado")
     })
     public ResponseEntity<Void> deleteProveedor(
-            @PathVariable @Parameter(description = "ID del proveedor") String id) {
+            @PathVariable @Parameter(description = "ID del proveedor") Integer id) {
         Proveedor existingProveedor = proveedorService.obtenerProveedor(id);
         if (existingProveedor != null) {
             proveedorService.eliminarProveedor(existingProveedor);
@@ -107,7 +107,7 @@ public class ProveedorController {
     })
     public ResponseEntity<List<Proveedor>> buscarProveedor(
             @RequestParam @Parameter(description = "Nombre del proveedor") String nombre) {
-        List<Proveedor> proveedores = proveedorService.buscarPorFiltros(nombre);
+        List<Proveedor> proveedores = proveedorService.obtenerProveedorPorFiltros(nombre);
         return new ResponseEntity<>(proveedores, HttpStatus.OK);
     }
 }

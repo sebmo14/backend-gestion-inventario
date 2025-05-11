@@ -2,6 +2,7 @@ package Servicios;
 
 import Modelo.Producto;
 import Repositorios.ProductoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,12 @@ public class ProductoService {
     }
 
     // Eliminar un producto
+    @Transactional
     public void eliminarProducto(Producto producto) {
         productoRepository.delete(producto);
+    }
+
+    public List<Producto> obtenerProductosPorFiltro(String nombre, String categoria) {
+        return productoRepository.buscarPorFiltros(nombre, categoria);
     }
 }

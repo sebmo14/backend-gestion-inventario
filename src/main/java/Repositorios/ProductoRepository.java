@@ -29,10 +29,36 @@ public class ProductoRepository {
     }
 
     public List<Producto> findAll() {
-        return entityManager.createQuery("SELECT p FROM Producto p", Producto.class).getResultList();
+        return entityManager.createQuery(
+                "SELECT p FROM Producto p",
+                Producto.class
+        ).getResultList();
     }
-
+    @Transactional
     public void delete(Producto producto) {
         entityManager.remove(entityManager.contains(producto) ? producto : entityManager.merge(producto));
     }
+
+    public List<Producto> buscarPorFiltros(String nombre, String categoria) {
+        StringBuilder query = new StringBuilder("SELECT p FROM Producto p WHERE 1=1");
+
+        if (nombre != null && !nombre.isEmpty()) {
+            query.append(" AND LOWER(p.nombre) LIKE LOWER(:nombre)");
+        }
+        if (categoria != null && !categoria.isEmpty()) {
+            query.append(" AND LOWER(p.categoria.nombre) = LOWER(:categoria)");
+        }
+
+        var q = entityManager.createQuery(query.toString(), Producto.class);
+
+        if (nombre != null && !nombre.isEmpty()) {
+            q.setParameter("nombre", "%" + nombre + "%");
+        }
+        if (categoria != null && !categoria.isEmpty()) {
+            q.setParameter("categoria", categoria.toLowerCase());
+        }
+
+        return q.getResultList();
+    }
+
 }

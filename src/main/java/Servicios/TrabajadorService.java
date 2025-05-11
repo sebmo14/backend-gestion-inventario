@@ -20,7 +20,7 @@ public class TrabajadorService {
     }
 
     // Obtener un trabajador por su id
-    public Trabajador obtenerTrabajador(String id) {
+    public Trabajador obtenerTrabajador(Integer id) {
         return trabajadorRepository.findById(id);
     }
 
@@ -33,4 +33,14 @@ public class TrabajadorService {
     public void eliminarTrabajador(Trabajador trabajador) {
         trabajadorRepository.delete(trabajador);
     }
+
+    public List<Trabajador> obtenerTrabajadoresPorFiltro(String nombre) {
+        return trabajadorRepository.buscarPorFiltro(nombre);
+    }
+
+    public Trabajador obtenerTrabajadorPorEmail(String email) {
+        return trabajadorRepository.findByEmail(email);
+    }
+
+
 }

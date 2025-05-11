@@ -98,14 +98,5 @@ public class ReporteController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/buscar")
-    @Operation(summary = "Buscar reportes por título", description = "Busca reportes que contengan un texto en el título.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Reportes encontrados")
-    })
-    public ResponseEntity<List<Reporte>> buscarReporte(
-            @Parameter(description = "Título a buscar (puede ser parcial)", required = false)
-            @RequestParam(required = false) String titulo) {
-        return new ResponseEntity<>(reporteService.buscarPorFiltros(titulo), HttpStatus.OK);
-    }
+
 }

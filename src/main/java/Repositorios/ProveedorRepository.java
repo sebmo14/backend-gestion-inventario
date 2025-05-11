@@ -24,15 +24,23 @@ public class ProveedorRepository {
         }
     }
 
-    public Proveedor findById(String id) {
+    public Proveedor findById(Integer id) {
         return entityManager.find(Proveedor.class, id);
     }
 
     public List<Proveedor> findAll() {
         return entityManager.createQuery("SELECT p FROM Proveedor p", Proveedor.class).getResultList();
     }
-
+    @Transactional
     public void delete(Proveedor proveedor) {
         entityManager.remove(entityManager.contains(proveedor) ? proveedor : entityManager.merge(proveedor));
     }
+    public List<Proveedor> buscarPorNombre(String nombre) {
+        return entityManager.createQuery(
+                        "SELECT p FROM Proveedor p WHERE LOWER(p.nombre) LIKE LOWER(:nombre)",
+                        Proveedor.class)
+                .setParameter("nombre", "%" + nombre + "%")
+                .getResultList();
+    }
+
 }

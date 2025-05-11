@@ -8,26 +8,28 @@ import java.util.UUID;
 public class Proveedor {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idProveedores")
+    private Integer id;
 
     @Column(nullable = false)
     private String nombre;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "Correo", nullable = false, unique = true)
     private String email;
 
-    @Column
+    @Column(name = "Direccion")
     private String direccion;
 
-    @Column(name = "numero_telefono")
+    @Column(name = "Numero")
     private int numeroTlf;
 
     public Proveedor() {
-        this.id = UUID.randomUUID().toString();
+
     }
 
     public Proveedor(String nombre, String email, String direccion, int numeroTlf) {
-        this.id = UUID.randomUUID().toString();
+        this.id = id;
         this.nombre = nombre;
         this.email = email;
         this.direccion = direccion;
@@ -35,11 +37,11 @@ public class Proveedor {
     }
 
     // Getters y Setters
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -9,16 +9,17 @@ import java.util.UUID;
 public class Categoria {
 
     @Id
-    @Column(name = "id", nullable = false, unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID", nullable = false, unique = true)
     private Integer id;
 
-    @Column(name = "nombre", nullable = false)
+    @Column(name = "Nombre", nullable = false)
     private String nombre;
 
-    @Column(name = "descripcion")
+    @Column(name = "Descripcion")
     private String descripcion;
 
-    @Column(name = "fecha_creacion")
+    @Column
     private LocalDate fechaCreacion;
 
     public Categoria(Integer id, String nombre, String descripcion, LocalDate fechaCreacion) {

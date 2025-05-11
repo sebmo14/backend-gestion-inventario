@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,7 @@ public class TrabajadorController {
             @ApiResponse(responseCode = "200", description = "Trabajador encontrado"),
             @ApiResponse(responseCode = "404", description = "Trabajador no encontrado")
     })
-    public ResponseEntity<Trabajador> getTrabajador(@PathVariable String id) {
+    public ResponseEntity<Trabajador> getTrabajador(@PathVariable Integer id) {
         Trabajador trabajador = trabajadorService.obtenerTrabajador(id);
         return (trabajador != null) ? new ResponseEntity<>(trabajador, HttpStatus.OK)
                 : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -62,7 +63,7 @@ public class TrabajadorController {
             @ApiResponse(responseCode = "200", description = "Trabajador actualizado"),
             @ApiResponse(responseCode = "404", description = "Trabajador no encontrado")
     })
-    public ResponseEntity<Trabajador> updateTrabajador(@PathVariable String id, @RequestBody Trabajador trabajador) {
+    public ResponseEntity<Trabajador> updateTrabajador(@PathVariable Integer id, @RequestBody Trabajador trabajador) {
         Trabajador existente = trabajadorService.obtenerTrabajador(id);
         if (existente != null) {
             trabajador.setId(id);
@@ -77,7 +78,7 @@ public class TrabajadorController {
             @ApiResponse(responseCode = "204", description = "Trabajador eliminado"),
             @ApiResponse(responseCode = "404", description = "Trabajador no encontrado")
     })
-    public ResponseEntity<Void> deleteTrabajador(@PathVariable String id) {
+    public ResponseEntity<Void> deleteTrabajador(@PathVariable Integer id) {
         Trabajador trabajador = trabajadorService.obtenerTrabajador(id);
         if (trabajador != null) {
             trabajadorService.eliminarTrabajador(trabajador);
@@ -90,7 +91,7 @@ public class TrabajadorController {
     @Operation(summary = "Buscar trabajadores por nombre", description = "Permite buscar trabajadores que contengan un nombre parcial o completo.")
     @ApiResponse(responseCode = "200", description = "Trabajadores encontrados")
     public ResponseEntity<List<Trabajador>> buscarTrabajador(@RequestParam String nombre) {
-        return new ResponseEntity<>(trabajadorService.buscarPorFiltros(nombre), HttpStatus.OK);
+        return new ResponseEntity<>(trabajadorService.obtenerTrabajadoresPorFiltro(nombre), HttpStatus.OK);
     }
 
     @PostMapping("/login")
@@ -100,7 +101,7 @@ public class TrabajadorController {
             @ApiResponse(responseCode = "401", description = "Credenciales incorrectas")
     })
     public ResponseEntity<Trabajador> login(@RequestBody LoginRequest request) {
-        Trabajador trabajador = trabajadorService.findByEmail(request.getEmail());
+        Trabajador trabajador = trabajadorService.obtenerTrabajadorPorEmail(request.getEmail());
 
         if (trabajador != null && trabajador.getContraseña().equals(request.getPassword())) {
             return new ResponseEntity<>(trabajador, HttpStatus.OK);

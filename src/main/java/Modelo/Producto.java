@@ -8,6 +8,8 @@ import java.util.UUID;
 public class Producto {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idProductos")
     private Integer id;
 
     @Column(nullable = false)
@@ -17,7 +19,7 @@ public class Producto {
     private String descripcion;
 
     @ManyToOne
-    @JoinColumn(name = "categoria_id", nullable = false)
+    @JoinColumn(name = "Categorias_ID", nullable = false)
     private Categoria categoria;
 
     @Column(nullable = false)

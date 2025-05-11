@@ -8,7 +8,9 @@ import java.util.UUID;
 public class Trabajador {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idTrabajadores")
+    private Integer id;
 
     @Column(nullable = false)
     private String nombre;
@@ -31,12 +33,9 @@ public class Trabajador {
     @Column(nullable = false)
     private int añosExpe;
 
-    public Trabajador() {
-        this.id = UUID.randomUUID().toString();
-    }
 
-    public Trabajador(String nombre, String apellidos, int edad, String correo, String contraseña, double salario, int añosExpe) {
-        this.id = UUID.randomUUID().toString();
+    public Trabajador(Integer id, String nombre, String apellidos, int edad, String correo, String contraseña, double salario, int añosExpe) {
+        this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.edad = edad;
@@ -44,6 +43,9 @@ public class Trabajador {
         this.contraseña = contraseña;
         this.salario = salario;
         this.añosExpe = añosExpe;
+    }
+
+    public Trabajador() {
     }
 
     // Getters y Setters
@@ -79,11 +81,11 @@ public class Trabajador {
         this.correo = correo;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

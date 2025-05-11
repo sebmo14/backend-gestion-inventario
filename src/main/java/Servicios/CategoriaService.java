@@ -4,6 +4,7 @@ import Modelo.Categoria;
 import Repositorios.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,7 +31,12 @@ public class CategoriaService {
     }
 
     // Eliminar una categoría
+    @Transactional
     public void eliminarCategoria(Categoria categoria) {
         categoriaRepository.delete(categoria);
+    }
+
+    public Categoria obtenerCategoriaPorNombre(String nombre) {
+        return categoriaRepository.findByNombre(nombre);
     }
 }

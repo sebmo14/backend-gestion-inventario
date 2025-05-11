@@ -2,16 +2,21 @@ package com.example.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import Controladores.*;
-import Modelo.*;
-import Repositorios.*;
-import Servicios.*;
+
+import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
 
 
-@SpringBootApplication(scanBasePackages = {"Controladores", "Servicios", "Modelo", "Repositorios", "DTO"})
+@SpringBootApplication
+@EntityScan(basePackages = {"Modelo"})
+@ComponentScan(basePackages = {"Controladores", "Servicios", "Modelo", "Repositorios"})
+
 public class DemoApplication {
 
 	public static void main(String[] args) {
+		Dotenv dotenv = Dotenv.load();
+		dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
 		SpringApplication.run(DemoApplication.class, args);
 	}
 

@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+        import java.util.List;
 
 @RestController
 @RequestMapping("/api/categorias")
@@ -47,6 +47,20 @@ public class CategoriaController {
             @Parameter(description = "ID de la categoría a buscar", required = true)
             @PathVariable int id) {
         Categoria categoria = categoriaService.obtenerCategoria(id);
+        return (categoria != null) ?
+                new ResponseEntity<>(categoria, HttpStatus.OK) :
+                new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    @GetMapping("/buscar")
+    @Operation(summary = "Buscar categoría por nombre", description = "Devuelve una categoría cuyo nombre coincida con el proporcionado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Categoría encontrada"),
+            @ApiResponse(responseCode = "404", description = "Categoría no encontrada")
+    })
+    public ResponseEntity<Categoria> getCategoriaByNombre(
+            @Parameter(description = "Nombre de la categoría a buscar", required = true)
+            @RequestParam String nombre) {
+        Categoria categoria = categoriaService.obtenerCategoriaPorNombre(nombre);
         return (categoria != null) ?
                 new ResponseEntity<>(categoria, HttpStatus.OK) :
                 new ResponseEntity<>(HttpStatus.NOT_FOUND);

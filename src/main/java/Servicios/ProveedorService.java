@@ -20,7 +20,7 @@ public class ProveedorService {
     }
 
     // Obtener un proveedor por su id
-    public Proveedor obtenerProveedor(String id) {
+    public Proveedor obtenerProveedor(Integer id) {
         return proveedorRepository.findById(id);
     }
 
@@ -33,4 +33,9 @@ public class ProveedorService {
     public void eliminarProveedor(Proveedor proveedor) {
         proveedorRepository.delete(proveedor);
     }
+    public List<Proveedor> obtenerProveedorPorFiltros(String nombre) {
+        return proveedorRepository.buscarPorNombre(nombre);
+    }
 }
+
+
