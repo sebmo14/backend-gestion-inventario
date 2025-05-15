@@ -3,14 +3,17 @@ package Controladores;
 import DTO.LoginRequest;
 import Modelo.Trabajador;
 import Servicios.TrabajadorService;
+import com.example.demo.SecurityConfig;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,13 +21,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/trabajadores")
 @Tag(name = "Trabajadores", description = "Operaciones relacionadas con los trabajadores")
+@Import(SecurityConfig.class)
 public class TrabajadorController {
 
     private final TrabajadorService trabajadorService;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Autowired
-    public TrabajadorController(TrabajadorService trabajadorService) {
+    public TrabajadorController(TrabajadorService trabajadorService, PasswordEncoder passwordEncoder) {
         this.trabajadorService = trabajadorService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
@@ -103,7 +110,7 @@ public class TrabajadorController {
     public ResponseEntity<Trabajador> login(@RequestBody LoginRequest request) {
         Trabajador trabajador = trabajadorService.obtenerTrabajadorPorEmail(request.getEmail());
 
-        if (trabajador != null && trabajador.getContraseña().equals(request.getPassword())) {
+        if (trabajador != null && passwordEncoder.matches(request.getPassword(), trabajador.getContraseña())) {
             return new ResponseEntity<>(trabajador, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
