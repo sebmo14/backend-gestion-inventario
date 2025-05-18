@@ -2,6 +2,7 @@ package Controladores;
 
 import DTO.LoginRequest;
 import Modelo.Trabajador;
+import Servicios.JwtService;
 import Servicios.TrabajadorService;
 import com.example.demo.SecurityConfig;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,23 +17,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/trabajadores")
 @Tag(name = "Trabajadores", description = "Operaciones relacionadas con los trabajadores")
 @Import(SecurityConfig.class)
+
 public class TrabajadorController {
 
     private final TrabajadorService trabajadorService;
+    private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
 
-
     @Autowired
-    public TrabajadorController(TrabajadorService trabajadorService, PasswordEncoder passwordEncoder) {
+    public TrabajadorController(TrabajadorService trabajadorService, JwtService jwtService, PasswordEncoder passwordEncoder) {
         this.trabajadorService = trabajadorService;
+        this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
     }
+
+
+
 
     @GetMapping
     @Operation(summary = "Obtener todos los trabajadores", description = "Devuelve una lista con todos los trabajadores registrados.")
@@ -107,13 +114,52 @@ public class TrabajadorController {
             @ApiResponse(responseCode = "200", description = "Login exitoso"),
             @ApiResponse(responseCode = "401", description = "Credenciales incorrectas")
     })
-    public ResponseEntity<Trabajador> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         Trabajador trabajador = trabajadorService.obtenerTrabajadorPorEmail(request.getEmail());
 
         if (trabajador != null && passwordEncoder.matches(request.getPassword(), trabajador.getContraseña())) {
-            return new ResponseEntity<>(trabajador, HttpStatus.OK);
+            String jwt = this.jwtService.generateJwtToken(trabajador);
+            return ResponseEntity.ok(new LoginResponse(jwt, trabajador.getCorreo(), trabajador.getId()));
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
     }
+
+    public static class LoginResponse {
+        private String token;
+        private String email;
+        private Integer idTrabajador;
+
+        public LoginResponse(String token, String email, Integer idTrabajador) {
+            this.token = token;
+            this.email = email;
+            this.idTrabajador = idTrabajador;
+
+        }
+
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public Integer getIdTrabajador() {
+            return idTrabajador;
+        }
+
+        public void setIdTrabajador(Integer idTrabajador) {
+            this.idTrabajador = idTrabajador;
+        }
+    }
+
 }

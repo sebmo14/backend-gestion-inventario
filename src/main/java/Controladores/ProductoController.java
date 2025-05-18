@@ -2,6 +2,7 @@ package Controladores;
 
 import Modelo.Categoria;
 import Modelo.Producto;
+import Servicios.JwtService;
 import Servicios.ProductoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -9,11 +10,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+
 
 @RestController
 @RequestMapping("/api/productos")
@@ -21,10 +25,12 @@ import java.util.List;
 public class ProductoController {
 
     private final ProductoService productoService;
+    private final JwtService jwtService;
 
     @Autowired
-    public ProductoController(ProductoService productoService) {
+    public ProductoController(ProductoService productoService, JwtService jwtService) {
         this.productoService = productoService;
+        this.jwtService = jwtService;
     }
 
     @GetMapping
@@ -89,11 +95,23 @@ public class ProductoController {
     @Operation(summary = "Eliminar un producto", description = "Elimina un producto dado su ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Producto eliminado correctamente"),
-            @ApiResponse(responseCode = "404", description = "Producto no encontrado")
+            @ApiResponse(responseCode = "404", description = "Producto no encontrado"),
+            @ApiResponse(responseCode = "401", description = "No autorizado") // <- añadido
     })
     public ResponseEntity<Void> deleteProducto(
             @Parameter(description = "ID del producto que se desea eliminar", required = true)
-            @PathVariable Integer id) {
+            @PathVariable Integer id,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
+        // Extraer el token desde el header
+        String token = jwtService.extractToken(authHeader);
+
+        // Validar el token
+        if (token == null || !jwtService.validateJwtToken(token)) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        // Si el token es válido, continuar con la lógica
         Producto existingProducto = productoService.obtenerProducto(id);
         if (existingProducto != null) {
             productoService.eliminarProducto(existingProducto);
@@ -102,6 +120,8 @@ public class ProductoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+
 
     @GetMapping("/buscar")
     @Operation(summary = "Buscar productos", description = "Busca productos por nombre y/o categoría.")
