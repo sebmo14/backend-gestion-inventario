@@ -15,8 +15,21 @@ import org.springframework.context.annotation.ComponentScan;
 public class DemoApplication {
 
 	public static void main(String[] args) {
-		Dotenv dotenv = Dotenv.load();
-		dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
+		Dotenv dotenv = Dotenv.configure()
+				.ignoreIfMissing()
+				.load();
+
+
+		if (dotenv != null) {
+			dotenv.entries().forEach(entry -> {
+
+				if (System.getProperty(entry.getKey()) == null && System.getenv(entry.getKey()) == null) {
+					System.setProperty(entry.getKey(), entry.getValue());
+				}
+
+			});
+		}
+
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
